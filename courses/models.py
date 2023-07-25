@@ -1,14 +1,5 @@
 from django.db import models
-
-
-class User(models.Model):
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15)
-    city = models.CharField(max_length=100)
-    avatar = models.ImageField(upload_to='avatars/')
-
-    def __str__(self):
-        return self.email
+from drm_users.models import User
 
 
 class Course(models.Model):
@@ -28,3 +19,20 @@ class Lesson(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_date = models.DateField()
+    paid_course_or_lesson = models.ForeignKey(
+        Course, on_delete=models.CASCADE, null=True, blank=True)
+    paid_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method_choices = (
+        ('cash', 'Наличные'),
+        ('bank_transfer', 'Перевод на счет'),
+    )
+    payment_method = models.CharField(
+        max_length=15, choices=payment_method_choices)
+
+    def __str__(self):
+        return f"Платеж {self.pk} - {self.user.email}"
