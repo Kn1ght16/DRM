@@ -1,5 +1,5 @@
 from django.db import models
-from drm_users.models import User
+from users.models import User
 
 
 class Course(models.Model):
