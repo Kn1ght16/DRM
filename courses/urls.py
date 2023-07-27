@@ -5,6 +5,8 @@ from courses.views import CourseViewSet, LessonListCreateView, LessonRetrieveUpd
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet)
 
+app_name = 'courses'
+
 urlpatterns = [
     path('', include(router.urls)),
     path('lessons/', LessonListCreateView.as_view(), name='lesson-list-create'),
