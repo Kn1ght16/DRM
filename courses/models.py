@@ -17,6 +17,12 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to='previews/')
     video_link = models.URLField()
 
+    def clean(self):
+        # Проверяем ссылку на youtube.com с помощью регулярного выражения
+        youtube_regex = r'^https?://(?:www\.)?youtube\.com/.+$'
+        if self.video_link and not re.match(youtube_regex, self.video_link):
+            raise models.ValidationError('Ссылка на видео должна быть на youtube.com.')
+
     def __str__(self):
         return self.title
 
@@ -36,3 +42,11 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Платеж {self.pk} - {self.user.email}"
+
+
+class Subscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.email} подписан на {self.course.title}"
